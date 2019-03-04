@@ -1,4 +1,4 @@
-import { containsPersian } from '../index';
+import { containsPersian } from '../languageDetectors';
 
 describe('Check containsPersian', () => {
   test('should return true if the string contains Persian', () => {
