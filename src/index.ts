@@ -1,3 +1,3 @@
-import { containsPersian } from './languageDetectors';
+import { extractContent } from './IO';
 
-export { containsPersian };
+export { extractContent };
