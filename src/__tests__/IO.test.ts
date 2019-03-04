@@ -1,5 +1,7 @@
 import { areValidFileNames, extractContent, fileExists } from '../IO';
 
+import { containsPersian } from '../languageDetectors';
+
 describe('fileExists', () => {
   test('should return true if file exists', () => {
     fileExists('./src/__tests__/testData/englishAndPersian.txt').then(result =>
@@ -55,7 +57,7 @@ describe('extractContent', () => {
     const input = './src/__tests__/testData/englishAndPersian.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2).then(result => {
+    extractContent(input, output1, output2, containsPersian).then(result => {
       expect(result.message).toEqual(
         'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
       );
@@ -66,7 +68,7 @@ describe('extractContent', () => {
     const input = './src/__tests__/testData/englishAndPersian.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2).then(result => {
+    extractContent(input, output1, output2, containsPersian).then(result => {
       fileExists(output1).then(result => expect(result).toEqual(true));
       fileExists(output2).then(result => expect(result).toEqual(true));
     });
@@ -76,7 +78,7 @@ describe('extractContent', () => {
     const input = './src/__tests__/testData/empty.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2).then(result =>
+    extractContent(input, output1, output2, containsPersian).then(result =>
       expect(result.message).toEqual(
         'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
       )
@@ -85,7 +87,12 @@ describe('extractContent', () => {
 
   test('should throw error if read file does not exist', async () => {
     try {
-      await extractContent('NotAFileName.txt', 'file1.txt', 'file2.txt');
+      await extractContent(
+        'NotAFileName.txt',
+        'file1.txt',
+        'file2.txt',
+        containsPersian
+      );
     } catch (e) {
       expect(e).toEqual(
         'One or more of the filenames specified is not valid: NotAFileName.txt, file1.txt, file2.txt.'
@@ -98,7 +105,8 @@ describe('extractContent', () => {
       await extractContent(
         './src/__tests__/testData/englishAndPersian.txt',
         '',
-        'file.txt'
+        'file.txt',
+        containsPersian
       );
     } catch (e) {
       expect(e).toEqual(
@@ -112,7 +120,8 @@ describe('extractContent', () => {
       await extractContent(
         './src/__tests__/testData/englishAndPersian.txt',
         'file.txt',
-        ''
+        '',
+        containsPersian
       );
     } catch (e) {
       expect(e).toEqual(

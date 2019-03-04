@@ -7,13 +7,13 @@ import {
 } from 'fs';
 
 import { Result } from './models';
-import { containsPersian } from './languageDetectors';
 import { createInterface } from 'readline';
 
 const extractContent = (
   filePathInput: string,
   group1FilePathOutput: string,
-  group2FilePathOutput: string
+  group2FilePathOutput: string,
+  group1Filter: (s: string) => boolean
 ): Promise<Result> => {
   return new Promise<Result>((resolve, reject) => {
     areValidFileNames(
@@ -31,7 +31,7 @@ const extractContent = (
             readStream,
             group1WriteStream,
             group2WriteStream,
-            containsPersian
+            group1Filter
           );
         });
 
