@@ -11,63 +11,67 @@ import { containsPersian } from './languageDetectors';
 import { createInterface } from 'readline';
 
 const extractContent = (
-  filePath: string,
-  notPersianFilePath: string,
-  persianFilePath: string
+  filePathInput: string,
+  group1FilePathOutput: string,
+  group2FilePathOutput: string
 ): Promise<Result> => {
   return new Promise<Result>((resolve, reject) => {
-    areValidFileNames(filePath, notPersianFilePath, persianFilePath).then(
-      validFilenames => {
-        if (validFilenames) {
-          const readStream = createReadStream(filePath);
-          const notPersianWriteStream = createWriteStream(notPersianFilePath);
-          const persianWriteStream = createWriteStream(persianFilePath);
+    areValidFileNames(
+      filePathInput,
+      group1FilePathOutput,
+      group2FilePathOutput
+    ).then(validFilenames => {
+      if (validFilenames) {
+        const readStream = createReadStream(filePathInput);
+        const group1WriteStream = createWriteStream(group1FilePathOutput);
+        const group2WriteStream = createWriteStream(group2FilePathOutput);
 
-          readStream.on('open', () => {
-            spiltContentIntoTwoFiles(
-              readStream,
-              notPersianWriteStream,
-              persianWriteStream
-            );
-          });
-
-          readStream.on('end', () => {
-            return resolve(
-              new Result(
-                `Successfully wrote to files. Persian: ${persianFilePath}. Not Persian: ${notPersianFilePath}.`
-              )
-            );
-          });
-
-          readStream.on('error', reject);
-        } else {
-          return reject(
-            `One or more of the filenames specified is not valid: ${filePath}, ${notPersianFilePath}, ${persianFilePath}.`
+        readStream.on('open', () => {
+          spiltContentIntoTwoFiles(
+            readStream,
+            group1WriteStream,
+            group2WriteStream,
+            containsPersian
           );
-        }
+        });
+
+        readStream.on('end', () => {
+          return resolve(
+            new Result(
+              `Successfully wrote to files. Group1: ${group1FilePathOutput}. Group2: ${group2FilePathOutput}.`
+            )
+          );
+        });
+
+        readStream.on('error', reject);
+      } else {
+        return reject(
+          `One or more of the filenames specified is not valid: ${filePathInput}, ${group1FilePathOutput}, ${group2FilePathOutput}.`
+        );
       }
-    );
+    });
   });
 };
 
 const spiltContentIntoTwoFiles = (
   stream: ReadStream,
-  notPersianWriteStream: WriteStream,
-  persianWriteStream: WriteStream
+  group1WriteStream: WriteStream,
+  group2WriteStream: WriteStream,
+  group1Filter: (s: string) => boolean
 ): void => {
   const streamInterface = createInterface(stream);
 
   streamInterface.on('line', input => {
-    if (containsPersian(input)) {
-      persianWriteStream.write(`${input}\n`, 'utf-8');
+    if (group1Filter(input)) {
+      group1WriteStream.write(`${input}\n`, 'utf-8');
     } else {
-      notPersianWriteStream.write(`${input}\n`, 'utf-8');
+      group2WriteStream.write(`${input}\n`, 'utf-8');
     }
   });
 
   streamInterface.on('close', () => {
-    persianWriteStream.end();
-    notPersianWriteStream.end();
+    group1WriteStream.end();
+    group2WriteStream.end();
   });
 };
 

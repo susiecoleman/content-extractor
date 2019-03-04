@@ -57,7 +57,7 @@ describe('extractContent', () => {
     const output2 = '/tmp/out2.txt';
     extractContent(input, output1, output2).then(result => {
       expect(result.message).toEqual(
-        'Successfully wrote to files. Persian: /tmp/out2.txt. Not Persian: /tmp/out1.txt.'
+        'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
       );
     });
   });
@@ -78,7 +78,7 @@ describe('extractContent', () => {
     const output2 = '/tmp/out2.txt';
     extractContent(input, output1, output2).then(result =>
       expect(result.message).toEqual(
-        'Successfully wrote to files. Persian: /tmp/out2.txt. Not Persian: /tmp/out1.txt.'
+        'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
       )
     );
   });
