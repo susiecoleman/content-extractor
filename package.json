@@ -1,5 +1,5 @@
 {
-  "name": "language-extractor",
+  "name": "content-extractor",
   "version": "0.1.0",
   "scripts": {
     "validate": "yarn run lint && yarn run build && yarn run test",
