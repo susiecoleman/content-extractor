@@ -4,13 +4,15 @@ import { containsPersian } from '../languageDetectors';
 
 describe('fileExists', () => {
   test('should return true if file exists', () => {
-    fileExists('./src/__tests__/testData/englishAndPersian.txt').then(result =>
-      expect(result).toEqual(true)
+    return fileExists('./src/__tests__/testData/englishAndPersian.txt').then(
+      result => expect(result).toEqual(true)
     );
   });
 
   test('should return false if file exists', () => {
-    fileExists('NotAFileName').then(result => expect(result).toEqual(false));
+    return fileExists('NotAFileName').then(result =>
+      expect(result).toEqual(false)
+    );
   });
 });
 
@@ -19,7 +21,7 @@ describe('areValidFileNames', () => {
     const input = './src/__tests__/testData/englishAndPersian.txt';
     const output1 = 'output1.txt';
     const output2 = 'output2.txt';
-    areValidFileNames(input, output1, output2).then(valid =>
+    return areValidFileNames(input, output1, output2).then(valid =>
       expect(valid).toEqual(true)
     );
   });
@@ -28,7 +30,7 @@ describe('areValidFileNames', () => {
     const input = 'NotAFileName.txt';
     const output1 = 'output1.txt';
     const output2 = 'output2.txt';
-    areValidFileNames(input, output1, output2).then(valid =>
+    return areValidFileNames(input, output1, output2).then(valid =>
       expect(valid).toEqual(false)
     );
   });
@@ -37,7 +39,7 @@ describe('areValidFileNames', () => {
     const input = 'NotAFileName.txt';
     const output1 = '';
     const output2 = 'output2.txt';
-    areValidFileNames(input, output1, output2).then(valid =>
+    return areValidFileNames(input, output1, output2).then(valid =>
       expect(valid).toEqual(false)
     );
   });
@@ -46,7 +48,7 @@ describe('areValidFileNames', () => {
     const input = 'NotAFileName.txt';
     const output1 = 'output1.txt';
     const output2 = '';
-    areValidFileNames(input, output1, output2).then(valid =>
+    return areValidFileNames(input, output1, output2).then(valid =>
       expect(valid).toEqual(false)
     );
   });
@@ -57,31 +59,36 @@ describe('extractContent', () => {
     const input = './src/__tests__/testData/englishAndPersian.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2, containsPersian).then(result => {
-      expect(result.message).toEqual(
-        'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
-      );
-    });
+    return extractContent(input, output1, output2, containsPersian).then(
+      result => {
+        expect(result.message).toEqual(
+          'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
+        );
+      }
+    );
   });
 
   test('should create output files if all filenames are valid', () => {
     const input = './src/__tests__/testData/englishAndPersian.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2, containsPersian).then(result => {
-      fileExists(output1).then(result => expect(result).toEqual(true));
-      fileExists(output2).then(result => expect(result).toEqual(true));
-    });
+    return extractContent(input, output1, output2, containsPersian).then(
+      result => {
+        fileExists(output1).then(result => expect(result).toEqual(true));
+        fileExists(output2).then(result => expect(result).toEqual(true));
+      }
+    );
   });
 
   test('should complete successfully and return a Result object when reading in an empty file', () => {
     const input = './src/__tests__/testData/empty.txt';
     const output1 = '/tmp/out1.txt';
     const output2 = '/tmp/out2.txt';
-    extractContent(input, output1, output2, containsPersian).then(result =>
-      expect(result.message).toEqual(
-        'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
-      )
+    return extractContent(input, output1, output2, containsPersian).then(
+      result =>
+        expect(result.message).toEqual(
+          'Successfully wrote to files. Group1: /tmp/out1.txt. Group2: /tmp/out2.txt.'
+        )
     );
   });
 
