@@ -1,6 +1,7 @@
 {
   "name": "content-extractor",
   "version": "0.1.0",
+  "description": "Takes a text file and splits it into 2 files based on a filter",
   "scripts": {
     "validate": "yarn run lint && yarn run build && yarn run test",
     "build": "tsc",
@@ -9,6 +10,11 @@
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/susiecoleman/content-extractor"
+  },
+  "homepage": "https://github.com/susiecoleman/content-extractor#readme",
   "license": "Apache-2.0",
   "dependencies": {
     "typescript": "^3.3.3333"
